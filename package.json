@@ -1,0 +1,15 @@
+{
+  "name": "file-picker-plupload",
+  "version": "1.0.0",
+  "description": "The Kloudless File Picker Plupload Module is a module used in The Kloudless File Picker.",
+  "main": "plupload.dev.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.ops.kloudless.com:kloudless-dev/file-picker-plupload-module.git"
+  },
+  "author": "Kloudless <hello@kloudless.com> (https://kloudless.com)",
+  "license": "AGPL-3.0-or-later"
+}
