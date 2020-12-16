@@ -11,5 +11,5 @@
     "url": "git@gitlab.ops.kloudless.com:kloudless-dev/file-picker-plupload-module.git"
   },
   "author": "Kloudless <hello@kloudless.com> (https://kloudless.com)",
-  "license": "AGPL-3.0-or-later"
+  "license": "AGPL-3.0-only"
 }
