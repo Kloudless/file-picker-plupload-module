@@ -1,7 +1,7 @@
 {
   "name": "file-picker-plupload",
   "version": "1.0.0",
-  "description": "The Kloudless File Picker Plupload Module is a module used in The Kloudless File Picker.",
+  "description": "The Kloudless File Picker Plupload Module is optionally used by the Kloudless File Picker.",
   "main": "plupload.dev.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
