@@ -19,7 +19,7 @@ import debounce from 'lodash.debounce';
  *	jquery.ui.sortable.js
  */
 
- /* global jQuery:true */
+ /* global jQuery:true, mOxie:true */
 
 /**
 jQuery UI based implementation of the Plupload API - multi-runtime file uploading API.
