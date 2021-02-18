@@ -75,6 +75,10 @@ function normalizeCaps(settings) {
 			caps.send_binary_string = true;
 		}
 
+		if (settings.http_method) {
+			caps.use_http_method = settings.http_method;
+		}
+
 		plupload.each(settings, function(value, feature) {
 			resolve(feature, !!value, true); // strict check
 		});
@@ -740,6 +744,7 @@ plupload.addFileFilter('prevent_duplicates', function(value, file, cb) {
 	@param {String} [settings.silverlight_xap_url] URL of the Silverlight xap.
 	@param {Boolean} [settings.unique_names=false] If true will generate unique filenames for uploaded files.
 	@param {Boolean} [settings.send_file_name=true] Whether to send file name as additional argument - 'name' (required for chunked uploads and some other cases where file name cannot be sent via normal ways).
+	@param {String} [settings.http_method="POST"] HTTP method to use during upload (only PUT or POST allowed).
 */
 plupload.Uploader = function(options) {
 	/**
@@ -920,7 +925,12 @@ plupload.Uploader = function(options) {
 			if (!nextFile) {
 				plupload.each(files, function(file) {
 					if (file.status == plupload.QUEUED) {
-						if (up.trigger("BeforeUpload", file)) {
+						if (up.trigger({
+							type: "BeforeUpload",
+							async: false
+							// The "async" option is in lib/plupload/moxie.js line 1860
+							// dispatchEvent() function
+						}, file)) {
 							nextFile = file;
 							return false;
 						}
@@ -1233,6 +1243,9 @@ plupload.Uploader = function(options) {
 						reinitRequired = true;
 					}
 					break;
+				case 'http_method':
+					settings[option] = value.toUpperCase() === 'PUT' ? 'PUT' : 'POST';
+					break;
 
 				default:
 					settings[option] = value;
@@ -1409,7 +1422,8 @@ plupload.Uploader = function(options) {
 			crop: false
 		},
 		send_file_name: true,
-		send_chunk_number: true
+		send_chunk_number: true,
+		http_method: 'POST'
 	};
 
 
@@ -2323,7 +2337,7 @@ plupload.File = (function() {
 					// Build multipart request
 					if (options.multipart && features.multipart) {
 
-						xhr.open("post", url, true);
+						xhr.open(options.http_method, url, true);
 
 						// Set custom headers
 						plupload.each(options.headers, function(value, name) {
@@ -2350,7 +2364,7 @@ plupload.File = (function() {
 						// if no multipart, send as binary stream
 						url = plupload.buildUrl(options.url, plupload.extend(data, options.multipart_params));
 
-						xhr.open("post", url, true);
+            xhr.open(options.http_method, url, true);
 
 						xhr.setRequestHeader('Content-Type', 'application/octet-stream'); // Binary stream header
 
