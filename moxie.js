@@ -1922,7 +1922,7 @@ define('moxie/core/EventTarget', [
 						 compatibility.
 						 */
 						if (evt.async) {
-							queue.push(cb => setTimeout(task(cb), 1));
+							queue.push(cb => setTimeout(() => task(cb), 1));
 						} else {
 							queue.push(cb => task(cb));
 						}
