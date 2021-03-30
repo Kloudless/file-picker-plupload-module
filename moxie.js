@@ -10129,9 +10129,8 @@ define("moxie/runtime/html4/Runtime", [
 				return I.can('select_file');
 			},
 			summon_file_dialog: Test(function() { // yeah... some dirty sniffing here...
-				return (Env.browser === 'Firefox' && Env.version >= 4) ||
-					(Env.browser === 'Opera' && Env.version >= 12) ||
-					!!~Basic.inArray(Env.browser, ['Chrome', 'Safari']);
+				return !(Env.browser === 'Firefox' && Env.version < 4) &&
+					!(Env.browser === 'Opera' && Env.version < 12);
 			}()),
 			upload_filesize: True,
 			use_http_method: function(methods) {
