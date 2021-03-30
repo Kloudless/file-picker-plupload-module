@@ -1,6 +1,6 @@
 {
   "name": "@kloudless/file-picker-plupload-module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Kloudless File Picker Plupload Module is optionally used by the Kloudless File Picker.",
   "main": "plupload.dev.js",
   "scripts": {
