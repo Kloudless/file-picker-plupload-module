@@ -17,14 +17,6 @@
 /*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */
 /*globals $code */
 
-/**
- * Because this lib has been transpiled to asynchronous module definition,
- * Transpiling it again by babel will cause an issue, `this` will be replaced
- * with `undefined` in transpiling time. To resolve this issue, we pass a
- * local `_this` to the AMD handling function and then export `moxie` and
- * `mOxie` manually.
- */
-const _this = {};
 (function(exports, undefined) {
 	"use strict";
 
@@ -1916,34 +1908,16 @@ define('moxie/core/EventTarget', [
 						// explicitly set the target, otherwise events fired from shims do not get it
 						args[0].target = handler.scope;
 						// if event is marked as async, detach the handler
-						/*
-						 Make both `async` and `sync` event accept Promise. It will let
-						 them almost the same. But we keep them for backward
-						 compatibility.
-						 */
 						if (evt.async) {
-							queue.push(cb => setTimeout(task(cb), 1));
+							queue.push(function(cb) {
+								setTimeout(function() {
+									cb(handler.fn.apply(handler.scope, args) === false);
+								}, 1);
+							});
 						} else {
-							queue.push(cb => task(cb));
-						}
-
-						function task(cb) {
-							Promise.resolve(handler.fn.apply(handler.scope, args))
-								.then((result) => {
-									/*
-                 the callback function "cb" is in moxie.js line 246
-                 if pass 'true' to the callback, the event propagation
-                 will be stopped; if pass 'false', it will execute the
-                 next function in the event queue.
-                 */
-									// if handler(at line 1915) returns false stop propagation
-									cb(result === false);
-								})
-								.catch((err) => {
-									console.debug(err);
-									// error occurs in handler, stop propagation
-									cb(true);
-								});
+							queue.push(function(cb) {
+								cb(handler.fn.apply(handler.scope, args) === false); // if handler returns false stop propagation
+							});
 						}
 					});
 					if (queue.length) {
@@ -10698,8 +10672,7 @@ define("moxie/runtime/html4/image/Image", [
 });
 
 expose(["moxie/core/utils/Basic","moxie/core/I18n","moxie/core/utils/Mime","moxie/core/utils/Env","moxie/core/utils/Dom","moxie/core/Exceptions","moxie/core/EventTarget","moxie/core/utils/Encode","moxie/runtime/Runtime","moxie/runtime/RuntimeClient","moxie/file/Blob","moxie/file/File","moxie/file/FileInput","moxie/file/FileDrop","moxie/runtime/RuntimeTarget","moxie/file/FileReader","moxie/core/utils/Url","moxie/file/FileReaderSync","moxie/xhr/FormData","moxie/xhr/XMLHttpRequest","moxie/runtime/Transporter","moxie/image/Image","moxie/core/utils/Events"]);
-})(_this);
-/**
+})(this);/**
  * o.js
  *
  * Copyright 2013, Moxiecode Systems AB
@@ -10709,6 +10682,7 @@ expose(["moxie/core/utils/Basic","moxie/core/I18n","moxie/core/utils/Mime","moxi
  * Contributing: http://www.plupload.com/contributing
  */
 
+/*global moxie:true */
 
 /**
 Globally exposed namespace with the most frequently used public classes and handy methods.
@@ -10747,13 +10721,4 @@ Globally exposed namespace with the most frequently used public classes and hand
 		exports.o = o;
 	}
 	return o;
-})(_this);
-
-// See the explanation at line 21
-const moxie = _this.moxie;
-const mOxie = _this.mOxie;
-export {
-	moxie,
-	mOxie,
-};
-
+})(this);
